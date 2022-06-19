@@ -1,15 +1,29 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import styled from 'styled-components'
+import db from '../firebase'
 import ImgSlider from './ImgSlider'
+import Movies from './Movies'
 import Viewers from './Viewers'
 
 
 
+
 function Home() {
+
+  useEffect(()=>{
+    db.collection("movies").onSnapshot((snapshot)=>{
+      let tempMovies = snapshot.docs.map((doc)=>{
+        return {id: doc.id, ...doc.data()}
+      })
+      console.log(tempMovies)
+    })
+  },[])
+
   return (
     <Container>
         <ImgSlider/>
         <Viewers/>
+        <Movies/>
     </Container>
     
   )
@@ -22,6 +36,7 @@ const Container = styled.main`
     padding: 0 calc(3.5vw + 5px);
     position: relative;
     overflow-x:hidden;
+    
     &:before{
         background: url("img/home-background.png") center center / cover 
         no-repeat fixed;
